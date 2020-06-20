@@ -92,8 +92,10 @@
         <!-- 右侧主体内容 -->
         <div class="main" id="main_body">
             <!-- 默认的显示,就是echarts图表页面 -->
-            <iframe name="main_frame" src="./main_count.html" frameborder="0"
-                style="width: 100%; height: 100%;"></iframe>
+            <!-- 利用iframe的name属性值main_frame和列表里的a链接的target属性值main_frame关联 -->
+            <!-- 点击左边菜单，右边局部刷新对应页面，也不会跳转 -->
+            <iframe name='main_frame' src="./main_count.html" frameborder="0"
+                style="width: 100%;height: 100%;"></iframe>
         </div>
     </div>
 
