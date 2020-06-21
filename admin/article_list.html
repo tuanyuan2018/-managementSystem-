@@ -13,6 +13,36 @@
     <script src="./libs/jquery-1.12.4.min.js"></script>
     <!-- 引入模板引擎js文件 -->
     <script src="./libs/template-web.js"></script>
+    <!-- 引入自己的js文件 -->
+    <script src="./js/article_list.js"></script>
+    <!-- 引入http.js文件 -->
+    <script src="./libs/http.js"></script>
+    <!-- 引入分页插件js文件 -->
+    <script src="./libs/jquery.twbsPagination.js"></script>
+
+    <!-- 准备文章类别模板结构 -->
+    <script id="category_temp" type="text/html">
+        <option value="">所有分类</option>
+        {{each data v}}
+        <option value="{{v.id}}">{{v.name}}</option>
+        {{/each}}
+    </script>
+    <!-- 准备文章列表数据模板结构 -->
+    <script id="articleList_temp" type="text/html">
+        {{each data.data v}}
+        <tr>
+            <td>{{v.title}}</td>
+            <td>{{v.author}}</td>
+            <td>{{v.category}}</td>
+            <td class="text-center">{{v.date}}</td>
+            <td class="text-center">{{v.state}}</td>
+            <td class="text-center">
+                <a href="article_edit.html?id={{v.id}}" class="btn btn-default btn-xs">编辑</a>
+                <a href="javascript:void(0);" data-id='{{v.id}}' class="btn btn-danger btn-xs delete">删除</a>
+            </td>
+        </tr>
+        {{/each}}
+    </script>
 </head>
 
 <body>
@@ -69,6 +99,8 @@
                 </tbody>
             </table>
             <div class="row text-center">
+                <ul id="pagination" class="pagination-sm"></ul>
+                <p>没有数据</p>
             </div>
         </div>
     </div>
