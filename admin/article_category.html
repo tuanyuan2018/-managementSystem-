@@ -14,6 +14,25 @@
     <script src="./libs/bootstrap/js/bootstrap.min.js"></script>
     <!-- 引入模板引擎js文件 -->
     <script src="./libs/template-web.js"></script>
+    <!-- 导入自己的js文件 -->
+    <script src="./js/article_category.js"></script>
+    <!-- 导入接口地址js文件 -->
+    <script src="./libs/http.js"></script>
+
+    <!-- 2、文章类别管理显示所有类别模板结构 -->
+    <script id="category_temp" type="text/html">
+        {{each data v}}
+        <tr>
+            <td>{{v.name}}</td>
+            <td>{{v.slug}}</td>
+            <td class="text-center">
+                <a href="javascript:void(0)" data-id={{v.id}} data-toggle="modal" data-target="#myModal"
+                    class=" btn btn-info btn-xs">编辑</a>
+                <a href="javascript:void(0)" data-id={{v.id}} class="btn btn-danger btn-xs btn-delete">删除</a>
+            </td>
+        </tr>
+        {{/each}}
+    </script>
 </head>
 
 <body>
@@ -52,36 +71,43 @@
         </div>
     </div>
 
-    <!-- bootstrap的模态框 -->
+
+    <!-- 类别页面点击新增编辑弹出模态框-->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
+
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">New message</h4>
+                    <h4 class="modal-title" id="myModalLabel">新增类别</h4>
                 </div>
+
                 <div class="modal-body">
                     <form>
-                        <!-- 隐藏域,保存当前点击的文章分类的id -->
-                        <input type="hidden" id="categoryId" name="">
+                        <!-- 隐藏域,保存当前这一条文章类别的id -->
+                        <input type="hidden" name="id" id="categoryId">
+
                         <div class="form-group">
-                            <label for="recipient-name" class="control-label">分类名称:</label>
-                            <input type="text" class="form-control" id="recipient-name">
+                            <label for="recipient-name" class="control-label">文章分类名称:</label>
+                            <input type="text" name="name" class="form-control" id="recipient-name">
                         </div>
                         <div class="form-group">
-                            <label for="message-text" class="control-label">分类别名:</label>
-                            <input type="text" class="form-control" id="message-text"></input>
+                            <label for="message-text" class="control-label">文章分类名称:</label>
+                            <input class="form-control" name="slug" id="message-text"></input>
                         </div>
                     </form>
                 </div>
+
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" id='btnCancel' data-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" id="addOrEdit">Send message</button>
+                    <button type="button" class="btn btn-default btn-cancel" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary btn-queren" id="addOrEdit">确认</button>
                 </div>
             </div>
         </div>
     </div>
+
+
 
 </body>
 
