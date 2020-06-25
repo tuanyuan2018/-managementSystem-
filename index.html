@@ -227,6 +227,203 @@
     <script src="./js/template-web.js"></script>
     <!-- 引入jq文件 -->
     <script src="./js/jquery-1.12.4.min.js"></script>
+    <!-- 一、热点图模板结构 -->
+    <script id="hotpic_temp" type="text/html">
+        {{each data v}}
+        {{if $index ==0}}
+        <li class='first'>
+            {{else}}
+        <li>
+            {{/if}}
+            <a href="./article.html?id={{v.id}}"><img src="{{v.cover}}" alt=""></a>
+            <p>{{v.title}}</p>
+        </li>
+        {{/each}}
+    </script>
+
+    <!-- 二、最新资讯模板结构 -->
+    <script id="latest_temp" type="text/html">
+        {{each data v}}
+        <div class="common_news_list">
+            <a href="./article.html?id={{v.id}}" class="list_pic"><img src="{{v.cover}}" alt=""></a>
+            <h4><a href="./article.html?id={{v.id}}">{{v.title}} </a></h4>
+            <p>{{@ v.intro}}</p>
+            <div class="new_info">
+                <span>标签：{{v.category}}&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+                    <i class="fa fa-eye"></i>&nbsp;阅读({{v.read}})&nbsp;&nbsp;&nbsp;
+                    <i class="fa fa-commenting"></i>&nbsp;评论( {{v.comments}} )
+                </span>
+                <b>发布于{{v.date}}</b>
+            </div>
+        </div>
+        {{/each}}
+    </script>
+
+    <!-- 三，一周热门排行模板结构 -->
+    <script id="rank" type="text/html">
+        {{each data v}}
+        <li>
+            {{if $index==0}}
+            <span class="first">{{$index+1}}</span>
+            {{else if $index==1}}
+            <span class="second">{{$index+1}}</span>
+            {{else if $index==2}}
+            <span class="third">{{$index+1}}</span>
+            {{else}}
+            <span>{{$index+1}}</span>
+            {{/if}}
+            <a href="./article.html?id={{v.id}}">{{v.title}}
+            </a>
+        </li>
+        {{/each}}
+    </script>
+
+
+    <!-- 四:最新评论模板 -->
+    <script id="latestcomment_temp" type="text/html">
+        {{each data v}}
+        <li>
+            <span>{{v.author.substr(0,1)}}</span>
+            <b><em>{{v.author}}</em> {{v.date}}说:</b>
+            <strong>{{v.intro}}</strong>
+        </li>
+        {{/each}}
+    </script>
+
+    <!-- 五:焦点关注模板 -->
+    <script id="attention_temp" type="text/html">
+        {{each data v}}
+        <li><a href="./article.html?id={{v.id}}">{{v.intro}}</a></li>
+        {{/each}}
+    </script>
+
+
+    <!-- 六:所有的文章类别模板 -->
+    <script id="category_temp" type="text/html">
+        <li class="up"></li>
+        {{each data v}}
+        <li><a href="./list.html?id={{v.id}}">{{v.name}}</a></li>
+        {{/each}}
+    </script>
+
+    <!-- 横着的：所有的文章类别模板 -->
+    <script id="category_temp2" type="text/html">
+        {{each data v}}
+        <li><a href="./list.html?id={{v.id}}">{{v.name}}</a></li>
+        {{/each}}
+    </script>
+
+    <script>
+        // 入口函数
+        $(function () {
+            // 需求一：热点图，返回5条热点图
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/index/hotpic',
+                success: function (backData) {
+                    //console.log(backData);
+                    if (backData.code == 200) {
+                        var resHtml = template('hotpic_temp', backData);
+                        $('.focus_list').html(resHtml);
+                    }
+                }
+            });
+
+
+            // 需求二：最新资讯，也就是最新的已发布的文章5条
+            $.ajax({
+                type: 'get',
+                url: 'http://localhost:8080/api/v1/index/latest',
+                success: function (backData) {
+                    // console.log(backData);
+                    if (backData.code == 200) {
+                        var resHtml = template('latest_temp', backData);
+                        $('.common_news').html(resHtml);
+                    }
+                }
+            });
+
+
+            // 需求三：一周排行
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/index/rank',
+                success: function (backData) {
+                    // console.log(backData);
+                    if (backData.code == 200) {
+                        var resHtml = template('rank', backData);
+                        $('.hotrank_list').html(resHtml);
+                        //遍历数据
+                        //找到数据要渲染的标签,分别渲染上. 
+                        // for (var i = 0; i < backData.data.length; i++) {
+                        //     $('.hotrank_list>li').eq(i).children('a').text(backData.data[i].title);
+                        //     $('.hotrank_list>li').eq(i).children('a').attr('href',
+                        //         './article.html?id=' + backData.data[i].id);
+                        // }
+                    }
+                }
+            });
+
+
+            //需求四: 最新评论
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/index/latest_comment',
+                success: function (backData) {
+                    //console.log(backData);
+                    var resHtml = template('latestcomment_temp', backData);
+                    $('.comment_list').html(resHtml);
+                }
+            });
+
+
+            //五: 焦点关注
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/index/attention',
+                success: function (backData) {
+                    //console.log(backData);
+                    if (backData.code == 200) {
+                        var resHtml = template('attention_temp', backData);
+                        $('.guanzhu_list').html(resHtml);
+                    }
+                }
+            })
+
+
+            //六: 获取所有的文章类型
+            $.ajax({
+                url: 'http://localhost:8080/api/v1/index/category',
+                success: function (backData) {
+                    //console.log(backData);
+                    if (backData.code == 200) {
+                        var resHtml = template('category_temp', backData);
+                        $('.level_two').html(resHtml);;
+                        //横着的.获取所有的文章类型2
+                        var resHtml2 = template('category_temp2', backData);
+                        $('.left_menu.fl').html(resHtml2);
+                    }
+                }
+            });
+
+            // 七、文章搜索
+            // 给搜索按钮设置点击事件
+            $('.search_btn').on('click', function () {
+                // 获取用户输入内容
+                var searchTxt = $('.search_txt').val().trim();
+                if (searchTxt == '') {
+                    alert('搜索内容不能为空!');
+                    return;
+                }
+                // 跳转到list.html页面，把搜索的关键词带过去
+                window.location.href = './list.html?search=' + searchTxt;             
+            });
+
+            // 给文本框注册鼠标按下事件
+            $('.search_txt').on('keydown', function (e) {
+                // 判断按下的是不是回车键
+                if (e.keyCode == 13) {
+                     $('.search_btn').click();
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
